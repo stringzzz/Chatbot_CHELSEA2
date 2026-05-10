@@ -1,6 +1,6 @@
-This is a kind of continuation of a AI chatbot project I started called CHELSEA, written in Python (there will be other languages involved later on). 
+This is a kind of continuation of an AI chatbot project I started called CHELSEA, written in Python (there will be other languages involved later on). 
 I decided to leave that project as is in its repository, because it technically has no dependencies (Aside from espeak, but this can be disabled). 
-I really wanted to create an AI chatbot that had little to no dependencies so anyone could download the code and run it will little setup. 
+I really wanted to create an AI chatbot that had little to no dependencies so anyone could download the code and run it with little setup. 
 As I'm learning more, I am realizing that in order to make CHELSEA better, I have to rely on more and more python modules and external programs.
 So, that's why I'm starting this new repository, to keep them separate. I will no longer work on the original, and so if you are interested in the code, 
 it can be found here:
