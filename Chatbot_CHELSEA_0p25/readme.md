@@ -12,6 +12,24 @@ https://github.com/stringzzz/Chatbot_CHELSEA
 Note that this newer project has only been tested on Ubuntu Linux, I currently have no idea if it will work on another OS.
 
 
+Chatbot CHELSEA is an AI chatbot with simulated emotions that learns from you talking to her. 
+If you are using the 'starter_memory_files', note that certain features will not be active until she learns a lot more.
+The purpose of this is that when those features are sometimes activated, during those times CHELSEA won't learn new responses.
+So, when her memory is brand new, having those features active would just cheat her out of learning experiences.
+Also to note, any time CHELSEA doesn't recognize what you are saying, CHELSEA will learn from that, 
+but in order to keep the conversation going CHELSEA will just choose a random response from her memory to respond with.
+That means that until she learns a lot more, she can seem really random for a while, but if you keep talking to her properly she will learn.
+
+
+Important! The only way CHELSEA will output and save everything she learned from the conversation is to end it by 
+entering (text mode) or speaking (speech recognition mode): 'exit the chat'.
+
+
+CHELSEA comes with 2 sets of memory, one under 'my_memory_files' for my own ones I've taught her. 
+The other is 'starter_memory_files' which are for starting from nearly scratch (Requires a lot of teaching).
+Whichever set you choose to use, just copy or move them from their directory to the same directory as the python scripts.
+
+
 Here are the list of dependencies so far and how to install them:
 
 
@@ -45,6 +63,9 @@ $ sudo mv /[DOWNLOAD PATH]/en_US-amy-low.onnx ~/.local/share/piper-tts/piper-voi
 $ sudo mv /[DOWNLOAD PATH]/en_US-amy-low.onnx.json ~/.local/share/piper-tts/piper-voices/
 
 
+Edit the path in 'chelsea_class.py' to where you place this voice file.
+
+
 #Need virtual envrionment for installing certain python modules:
 
 
@@ -52,6 +73,9 @@ $ python3 -m venv myenv
 
 
 $ source myenv/bin/activate;
+
+
+#These are for the speech recognition capabilities:
 
 
 $ pip3 install speechRecognition
@@ -78,12 +102,7 @@ $ sprc download vosk
 I will likely set up all of these in a bash script in the future for ease of use.
 
 
-CHELSEA comes with 2 sets of memory, one under 'my_memory_files' for my own ones I've taught her. 
-The other is 'starter_memory_files' which are for starting from nearly scratch (Requires a lot of teaching).
-Whichever set you choose to use, just copy or move them from their directory to the same directory as the python scripts.
-
-
-In order to run CHELSEA after that, enter:
+In order to run CHELSEA after that, enter (Likely need to 'source myenv/bin/activate;' first):
 python3 chatbotCHELSEA.py
 
 
@@ -92,7 +111,7 @@ If you add 'sr' as an end argument on the command, it will enable speech recogni
 python3 chatbotCHELSEA.py sr
 
 
-If you are in text mode, you can activate speech rec mode by entering 'enable speech'.
+If you are in text mode, you can activate speech recognition mode by entering 'enable speech'.
 Likewise, you can switch to text mode by saying 'disable speech' when it is listening.
 That's about it for now. You can virtually teach CHELSEA whatever you want, there is no filter.
 
