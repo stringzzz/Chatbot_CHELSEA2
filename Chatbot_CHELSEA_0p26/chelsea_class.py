@@ -44,7 +44,7 @@ class chelsea:
 		self.chatlog = []
 		self.Xchatlog = []
 		self.chatlog_file = {"regular": f"{self.bot_name}chatlog.txt", "extended": f"{self.bot_name}Xchatlog.txt" }
-		self.file_path = "/home/stringzzz/AAA_Chatbot_CHELSEA2/experiments002/CHELSEA2_Exp_002B/" #PATH
+		self.file_path = "" #PATH
 		self.chelsea_self = {}
 		self.agree = ['agreed, ', 'true ', 'yes ', 'i know ', 'true that, ', 'okay ', 'for sure, ', 'oh yeah, ', 'indeed, ', 'yep, ', 'you know it, ', 'correct, ']
 		self.disagree = ['no, ', 'disagree, ', 'wrong, ', 'not true, ', 'false, ', 'nope, ', 'incorrect, ', 'i know otherwise, ', 'oh no, ', 'not valid, ', 'negative, ']
