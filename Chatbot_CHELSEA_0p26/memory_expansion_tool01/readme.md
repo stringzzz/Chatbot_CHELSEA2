@@ -1,7 +1,7 @@
 This tool is for expanding on CHELSEA's memory by answering the many 'what is/are' questions she forms when learning new words.
 
 
-The tool will run through the set of her questions 10 times, as when she learns new defintions it causes her to also learn new words,
+The tool will run through the set of her questions 10 times, as when she learns new definitions it causes her to also learn new words,
 so more questions are added each time.
 
 
