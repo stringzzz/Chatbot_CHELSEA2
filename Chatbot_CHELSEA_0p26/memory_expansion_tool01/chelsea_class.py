@@ -1172,7 +1172,7 @@ class chelsea:
 		#If not, return so it moves on to the next question
 		temp = self.get_definition(word)
 		if temp:
-			self.user_message = temp
+			self.user_message = temp.lower()
 		else:
 			return
 		
