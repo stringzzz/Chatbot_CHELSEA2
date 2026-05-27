@@ -100,7 +100,7 @@ That's about it for now. You can virtually teach CHELSEA whatever you want, ther
 Command line arguments (Can use in any order):
 
 
-'sr': Enables speech recognition mode, so you speak your replies instead, like this:
+'sr': Enables speech recognition mode, so you speak your replies instead.
 
 
 'nouser': Acts as if you are a brand new user that it makes a new set of information for, 
