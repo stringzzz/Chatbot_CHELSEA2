@@ -32,7 +32,7 @@ Whichever set you choose to use, just copy or move them from their directory to 
 
 Important! This program requires several dependencies. 
 Refer to 'dependency_installations.sh' to view them, and it can also be run to install all of them in one script.
-In order to run CHELSEA after that, enter (Likely need to 'source myenv/bin/activate;' first)
+In order to run CHELSEA after that likely need to 'source myenv/bin/activate' first.
 
 
 (05-12-2026)
