@@ -27,4 +27,4 @@ pip3 install PyAudio;
 
 #Offline speech recognition:
 pip3 install Vosk;
-sprc download vosk
+sprc download vosk;
