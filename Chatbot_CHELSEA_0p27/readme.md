@@ -40,9 +40,9 @@ Now comes with a tool to expand her memory by answering her many 'what is/are' q
 Refer to directory 'memory_expansion_tool02' for details.
 
 
-##################################################################################################################
-################################################# (05-27-2026) ###################################################
-##################################################################################################################
+####################################################
+#################### (05-27-2026) ##################
+####################################################
 
 
 There have been many changes including to CHELSEA's and the user's memory files. 
@@ -69,7 +69,7 @@ You can now move the file back into where your CHELSEA scripts are at.
 Now this file can be moved back to the same directory where you keep CHELSEA's code, and you are done converting.
 
 
-####################################################################################################################
+#######################################
 
 
 Known issue: After working on this latest version, there was something bothering me more and more. 
@@ -79,8 +79,7 @@ the parts of the regexes and put comments on them for much more clarity.
 This will be done within the next version.
 
 
-####################################################################################################################
-
+#######################################
 
 To run CHELSEA, enter (Likely need to 'source myenv/bin/activate;' first):
 python3 chatbotCHELSEA.py
