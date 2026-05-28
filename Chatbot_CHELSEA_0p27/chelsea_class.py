@@ -4625,7 +4625,7 @@ class chelsea:
 		
 		#Check for match with current topic or depth match (Coin flip)
 		
-		if ((len(self.current_topics) > 0) and self.dictionary_count >= 2500 and self.response_count >= 1200 and random.randint(1, 10) == 1) or (len(self.current_topics) > 0 and self.dictionary_count >= 600 and self.dictionary_count < 2500 and self.response_count >= 350 and self.response_count < 1200 and random.randint(1, 20) == 1):
+		if ((len(self.current_topics) > 0) and self.dictionary_count >= 2500 and self.response_count >= 1200 and random.randint(1, 15) == 1) or (len(self.current_topics) > 0 and self.dictionary_count >= 600 and self.dictionary_count < 2500 and self.response_count >= 350 and self.response_count < 1200 and random.randint(1, 25) == 1):
 
 			#Use 'dice rolls' to determine if topic or depth match used.
 			#Also decided by how much is in CHELSEA's memory.
@@ -5068,7 +5068,7 @@ class chelsea:
 		# so it should be avoided while CHELSEA barely knows anything.
 		
 		response_made = False
-		if ((self.dictionary_count >= 4500 and self.response_count >= 2700 and random.randint(1, 15) == 1) or (self.dictionary_count >= 2000 and self.dictionary_count < 4500 and self.response_count >= 500 and self.response_count < 2700 and random.randint(1, 25) == 1)):
+		if ((self.dictionary_count >= 4500 and self.response_count >= 2700 and random.randint(1, 30) == 1) or (self.dictionary_count >= 2000 and self.dictionary_count < 4500 and self.response_count >= 500 and self.response_count < 2700 and random.randint(1, 40) == 1)):
 		
 			response_made = False
 		
