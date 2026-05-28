@@ -4683,6 +4683,48 @@ class chelsea:
 							return True
 		
 		return False
+
+	def learn_new_response(self):
+
+		if self.user_gave_details:
+			self.user_gave_details = False
+			self.give_random_or_question_response()
+			return True
+		
+		#No match, either add to message/response pairs or learn new one based on reply mood
+		
+		self.Xchatlog.append(f"{self.bot_name} (Thinking): Message not recognized.")
+		
+		try:
+			#Attempt previous response as key under current mood
+			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]
+		
+		except(KeyError):
+			#Previous response under current mood does not exist as key, learn it as a new message, 
+			# make tied responses an empty list. 
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Learned new '{self.reply_mood["mood"]}' response.")
+			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response] = []
+		
+		duplicate_found = False
+		
+		for response in self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]:
+		
+			if (response == self.user_message):
+		
+				#User reply already found tied to message
+				duplicate_found = True
+				break
+		
+		if (not(duplicate_found)):
+
+			#User reply not found tied to message, tie it to message by appending it to list
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Added to '{self.reply_mood["mood"]}' responses.")
+			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response].append(self.user_message)
+
+		#Possibly learn new why is/are question from user_message
+		self.learn_why_isare_question()
+
+		return False
 	
 	def use_imagination2(self):
 
@@ -5165,48 +5207,6 @@ class chelsea:
 		
 		#Dice roll for single term match failed
 		return False
-	
-	def learn_new_response(self):
-
-		if self.user_gave_details:
-			self.user_gave_details = False
-			self.give_random_or_question_response()
-			return True
-		
-		#No match, either add to message/response pairs or learn new one based on reply mood
-		
-		self.Xchatlog.append(f"{self.bot_name} (Thinking): Message not recognized.")
-		
-		try:
-			#Attempt previous response as key under current mood
-			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]
-		
-		except(KeyError):
-			#Previous response under current mood does not exist as key, learn it as a new message, 
-			# make tied responses an empty list. 
-			self.Xchatlog.append(f"{self.bot_name} (Thinking): Learned new '{self.reply_mood["mood"]}' response.")
-			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response] = []
-		
-		duplicate_found = False
-		
-		for response in self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]:
-		
-			if (response == self.user_message):
-		
-				#User reply already found tied to message
-				duplicate_found = True
-				break
-		
-		if (not(duplicate_found)):
-
-			#User reply not found tied to message, tie it to message by appending it to list
-			self.Xchatlog.append(f"{self.bot_name} (Thinking): Added to '{self.reply_mood["mood"]}' responses.")
-			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response].append(self.user_message)
-
-		#Possibly learn new why is/are question from user_message
-		self.learn_why_isare_question()
-
-		return False
 
 	def find_topic_in_questions(self, isare):
 
@@ -5501,13 +5501,13 @@ class chelsea:
 			return
 		if self.check_partial_message_match():
 			return
+		if self.learn_new_response():
+			return	
 		if self.use_imagination2():
 			return
 		if self.check_topic_or_depth_match():
 			return
 		if self.check_single_term_match():
-			return
-		if self.learn_new_response():
 			return
 		self.give_random_or_question_response()
 
