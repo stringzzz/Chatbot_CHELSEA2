@@ -4718,7 +4718,7 @@ class chelsea:
 
 		ngram_count = len(self.bigrams) + len(self.trigrams)
 		
-		if ((ngram_count > 20000 and ngram_count < 80,000 and random.randint(1, 45) == 1) or (ngram_count > 80,000 and random.randint(1, 35) == 1)):
+		if ((ngram_count > 20000 and ngram_count < 80,000 and random.randint(1, 60) == 1) or (ngram_count > 80,000 and random.randint(1, 50) == 1)):
 
 			#Check if topics or depth words empty
 			chosen_word = ''
