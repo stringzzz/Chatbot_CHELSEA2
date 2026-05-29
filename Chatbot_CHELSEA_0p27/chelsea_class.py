@@ -4440,7 +4440,7 @@ class chelsea:
 					'date': datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 				})
 
-		if random.randint(1, 15) == 1:
+		if random.randint() == 1:
 
 			if len(self.current_topics) > 0:
 
@@ -4625,7 +4625,7 @@ class chelsea:
 		
 		#Check for match with current topic or depth match (Coin flip)
 		
-		if ((len(self.current_topics) > 0) and self.dictionary_count >= 2500 and self.response_count >= 1200 and random.randint(1, 15) == 1) or (len(self.current_topics) > 0 and self.dictionary_count >= 600 and self.dictionary_count < 2500 and self.response_count >= 350 and self.response_count < 1200 and random.randint(1, 25) == 1):
+		if ((len(self.current_topics) > 0) and self.dictionary_count >= 2500 and self.response_count >= 1200 and random.randint(1, 9) == 1) or (len(self.current_topics) > 0 and self.dictionary_count >= 600 and self.dictionary_count < 2500 and self.response_count >= 350 and self.response_count < 1200 and random.randint(1, 15) == 1):
 
 			#Use 'dice rolls' to determine if topic or depth match used.
 			#Also decided by how much is in CHELSEA's memory.
