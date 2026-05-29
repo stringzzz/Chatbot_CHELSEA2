@@ -179,19 +179,20 @@
 # 36. Check if message matches as part of a message in memory,
 # give linked reponse if so
 #
-# 37. Given certain memory conditions and PRNG, search for chain trigrams/bigrams starting with randomly 
+# 37. No match, add response to list in message memory or learn brand new message/response pair
+#
+# 38. Given certain memory conditions and PRNG, search for chain trigrams/bigrams starting with randomly 
 # chosen topic or depth word (Coin flip), chain either forward or reverse (Coin flip)
 #
-# 38. If certain # or greater messages and words in dictionary, PRNG to
+# 39. If certain # or greater messages and words in dictionary, PRNG to
 # determine if attempting topic match, or 'depth match' (Coin flip between two) 
 #
-# 39. If certain # or greater messages and words in dictionary, PRNG to
+# 40. If certain # or greater messages and words in dictionary, PRNG to
 # determine if doing single term match. If so, coin flip to determine whether
 # trying to match single word from message as part of message in memory,
 # or single word associated with word from message. Repond with linked 
 # response if so
 #
-# 40. No match, add response to list in message memory or learn brand new message/response pair
 #
 # 41. 1/6 chance asking unanswered question, else respond with random response from memory to keep conversation going
 #
