@@ -78,8 +78,8 @@ class chelsea:
 		#Synonym list for various pattern matching and responses
 		self.synonym_lists = {
 			'yes': ['yes', 'absolutely', 'certainly', 'indeed', 'by all means', 'assuredly', 'undoubtedly', 'yeah', 'yep', 
-			'yup', 'mhm', 'uh-huh', 'yah', 'for sure', 'you bet', 'of course', 'affirmative', 'exactly', 'roger that'],
-			'no': ['no', 'by no means', 'in no way', 'negative', 'nope', 'nah', 'nah bro', 'mm-mm', 'uh-uh', 'no way', 'nay', 'not'],
+			'yup', 'mhm', 'uh-huh', 'yah', 'for sure', 'you bet', 'of course', 'affirmative', 'exactly', 'roger that', 'correct'],
+			'no': ['no', 'by no means', 'in no way', 'negative', 'nope', 'nah', 'nah bro', 'mm-mm', 'uh-uh', 'no way', 'nay', 'not', 'incorrect'],
 			'have': ['have', 'own', 'possess', 'got', 'gots'],
 			'have not': ['do not have', 'don\'t have', 'do not own', 'do not possess', 'don\'t got', 'have no'],
 			'because': ['because', 'as', 'as a result of', 'by cause of', 'by reason of', 'by virtue of', 'considering', 'due to', 'for the reason that', 'owing to', 'since', 'thanks to', 'cuz'],
