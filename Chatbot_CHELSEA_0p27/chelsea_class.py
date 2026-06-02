@@ -945,7 +945,7 @@ class chelsea:
 	def filter_user_reply(self):
 		
 		#Filter certain chars from userMessage
-		self.user_message = re.sub(r"([^a-z0-9, \"'\-\?!])", '', self.user_message)
+		self.user_message = re.sub(r"([^a-z0-9, \"'\-\?!/])", '', self.user_message)
 
 	def get_exclaim_count(self):
 		
