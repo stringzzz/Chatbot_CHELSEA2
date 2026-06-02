@@ -854,8 +854,10 @@ class chelsea:
 		
 				breakout = False
 				for uam in self.user_self['uam']:
+
+					uam = uam['info']
 		
-					if (uam['info'] == match1.group(2)):
+					if (uam == match1.group(2)):
 
 						#Found agreement with 'i am'
 		
@@ -870,8 +872,10 @@ class chelsea:
 					return True
 		
 				for uamnot in self.user_self['uamnot']:
+
+					uamnot = uamnot['info']
 		
-					if (uamnot['info'] == match1.group(2)):
+					if (uamnot == match1.group(2)):
 
 						#Found disagreement with 'i am'
 		
@@ -900,8 +904,10 @@ class chelsea:
 		
 				breakout = False
 				for uamnot in self.user_self['uamnot']:
+
+					uamnot = uamnot['info']
 		
-					if (uamnot['info'] == match1.group(2)):
+					if (uamnot == match1.group(2)):
 
 						#Agreement with 'i am not' found
 		
@@ -916,8 +922,10 @@ class chelsea:
 					return True
 		
 				for uam in self.user_self['uam']:
+
+					uam = uam['info']
 		
-					if (uam['info'] == match1.group(2)):
+					if (uam == match1.group(2)):
 
 						#Disagreement with 'i am not' found
 		
