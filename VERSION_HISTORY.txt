@@ -1,0 +1,213 @@
+##################################################################################################################################################################
+# Chatbot CHELSEA: CHat Emotion Logic SEnse Automator
+# Project Start Date: 02-20-2024
+##################################################################################################################################################################
+# Version 0.04 (Not fully tested): 02-27-2024
+# Version 0.05 (All tested except Math Logic) 02-28-2024
+# Version 0.06 (Added current topic logic) 03-02-2024
+# Version 0.07 (Added WH-Question logic) 03-02-2024
+# Version 0.08 (Added 'What do you mean' logic) 03-03-2024
+# Version 0.09 (Added more question logic, some other small changes) 03-05-2024
+# Version 0.10 (Added counts for all associated words and converted file i/o to json) 03-10-2024
+# Version 0.11 ('depth match', uses matching words from previous 3 msg/resp. pairs) 03-11-2024
+# Version 0.12 (Cleaned inconsistent var cases, added detection of exclaim for emphasis) 03-15-2024
+# Version 0.13 (Expanded on message dictionary so multiple responses can be stored per message) 03-15-2024
+# Version 0.14 (Gave her method for storing and asking unanswered questions about words in her dictionary) 04-05-2024
+# ################################################################################################################################################################
+# Major changes (Version 0.15):
+# Converted all of CHELSEA's variables  and i/o into a class with different methods 10-04-2024
+# Changed all concatenated strings to f-strings 10-05-2024
+# Continued putting all code into class methods. I am more convinced this is the correct decision now,
+# 	as it seems like CHELSEA will be easier to work with and add to now.
+# All the changes to the code for this version were purely cosmetic, except that now the user can easily
+# choose to give their own chatbot whatever name they like. 10-06-2024
+# Added indentation to all json dump outputs to allow for human-readeable memory files 10-10-2024
+##################################################################################################################################################################
+# Version 0.16 (Chooses word from previous user reply to try and find unanswered question to ask) 10-25-2024
+# Version 0.17 (Reimplemented unused seen count, used currently for determining popular words, 
+# also uses in 'what is/are' questions) 10-26-2024
+##################################################################################################################################################################
+# Version 0.18 (Memory conversion! 'unanswered_questions2.json' now includes 'why is/are' questions) 10-27-2024
+# When learning new response, checks for '_1_ is/are _2_' pattern, then checks if 'because/etc' answer exists in memory
+# If not, learn new question, has chance of asking one of these questions later on
+# If question asked, waits for valid answer to question, or moves on if user doesn't answer it
+# Experimental! Would be much better if it filtered improper grammar, but for not answering the question with:
+# "that's not proper grammar", "that is incorrect grammar", etc. will delete the question
+##################################################################################################################################################################
+# Version 0.19 (Allowed CHELSEA to use current topics to search for relevant 'why is/are' questions): 10-31-2024
+# Version 0.20 (Now works experimentally with bigrams using a topic or depth word as a starter to 'imagine' a response): 11-08-2024
+# Version 0.21 (Now can use trigrams in same kind of way): 11-09-2024
+# Version 0.22 (Now the choice in bigrams and trigrams must match CHELSEA's mood when being formed): 11-10-2024
+##################################################################################################################################################################
+# Version 0.23 (Now called CHELSEA2, starting to make big changes, the first of which was implementing piper tts for a new voice): 03-31-2026
+# Version 0.24 (Added speech recognition capabilities, need to redirect extra lines of output from these programs to clear up the command line): 05-06-2026
+# Version 0.25 (Added the command line arg option of 'nosr' to disable speech recognition and use text mode instead) 
+				(Also can say 'disable speech' or type 'enable speech' to toggle on or off): 05-07-2026
+				(Made speech recognition disabled by default instead, now use 'sr' command line argument to enable it): 05-09-2026
+# Version 0.26 (Made a tool for expanding CHELSEA's memory by answering her many 'what is/are' questions using nltk module)
+				(The actual main code has only slightly been modified to make sure these questions are accurately detected)
+				(The tool for expanding the memory is in a separate directory that comes with this version): 05-12-2026
+##################################################################################################################################################################
+# Version 0.27 	(Implemented process arguments method for enabling modes 'speech recognition', 'no user file', and 'no memory output'): 05-20-2026 
+
+				(Implemented new formats for bigrams/trigrams, along with 'use_imagination2' method that uses them to form a response): 05-21-2026
+
+				(Gave new structure to 'user details' dictionary and json file): 05-22-2026
+
+			 	(Gave user the ability to tell CHELSEA 'i like/dislike _', 'my favorite song/movie/etc. is _', and 'i have/don't have _', 
+				She will store this with a timestamp, and sometimes ask why the user likes or has or the others, then when getting a response will 
+				ask for clarification before storing it in the user details as well): 05-23-2026
+
+	 			(CHELSEA can now ask user questions about certain details such as favorite movie, what song they like, and so on,
+				and or ask why they like it, then stores this information in the user file): 05-24-2026
+
+				(Gave CHELSEA the ability to ask if the user still likes/dislikes, has/has not, etc something in the user file
+				that was mentioned 2 or more weeks ago. User may they don't anymore, then after clarification may flip the entry in user file.
+				Also, if past said 'i like _', and later say 'i don't like _' (Not just for like, but all other paired user file entries),
+				then CHELSEA can catch the contradiction and deal with it accordingly, possibly flipping the entry to the opposite (like -> dislike)): 05-25-2026
+
+	 			(Can now say something like 'lol', CHELSEA stores her previous response in user file to recall at least 7 days later
+				if user seems to be in a laughing mood.
+				Also stores topics at end of chat, restores the previous set of them to topics at start of chat, and CHELSEA can bring up past topics at least
+				a day old.
+				Finally, user can give birthday, or CHELSEA can ask for it. If given birthday and it is today, give 'happy birthday' message,
+				also does so when starting the chat): 05-26-2026
+
+				(Now if recently gave dictionary word definition as random response, prevent this from happening again for a while. 
+				(Still does others such as use_imagination2 or single term match and so on, but it is better)): 05-27-2026
+##################################################################################################################################################################
+# Version 0.28	(Some cleanup, plus added capability to give greeting at beginning of chat depending on the time of day,
+				and potentially give specific holiday greeting if it is a holiday): 06-01-2026
+
+				(Gave ability to increase anger if user changed their mind about one of their preferences within the same
+				day as the original statement about it. Also now has persistent mood, these emotional values will reduce over time away from the chat. 
+				Currently keeping track of previous 50 moods, though the older ones aren't being used for anything yet): 06-02-2026
+
+				(CHELSEA now has a given birthday, and can respond to questions such as 'how old are you?' and 'when is your birthday?', 
+				along with getting a 'happy birthday' message from the user. Also, she now has her mood affected by if the user says they
+				like something that she dislikes, or the other way around. Finally, the old code for the user saying 'i am _' or 'i am not _'
+				has been redone into the same format that the newer code for things such as 'i like _' and or 'i have a _' is in): 06-03-2026
+##################################################################################################################################################################				
+
+############################################################################################
+##################### Chatbot CHELSEA message handling algorithm ###########################
+############################################################################################
+#
+# 1. User enters message
+#
+# 2. Detect if entered command to enable/disable speech recognition mode
+#
+# 3. Detect if math question, use external script to handle
+# and give solution to question (Highly experimental)
+#
+# 4. Detect if given 'happy birthday' or birthday related question
+#
+# 5. Detect if asking what she is or is not
+#
+# 6. Detect if asking what user is or is not
+#
+# 7. Detect if telling what she is or is not, learn accordingly
+# Also detect if contradiction to what she already knows
+#
+# 8. Detect if current user describing what they are or are not
+# Learn accordingly, detect if contradiction to what she already knows
+#
+# 9. Split message into words, remove punctuation
+# Determine mood of reply, add counts to CHELSEA mood as well
+#
+# 10. Mark unknown words in message
+#
+# 11. Add to counts for each word, adjust the tied emotion to them accordingly
+#
+# 12. Take each word and associate all other (non-neutral) words in message 
+# with them (Either start or add to count)
+# Comes into play in matching single associated word with highest count, or select
+# one randomly from list of highest
+#
+# 13. Identify bigrams in the user message and mark as new or add to counts if
+# already seen
+#
+# 14. Identify trigrams in the user message and mark as new or add to counts if
+# already seen
+#
+# 15. Add to running counts of all words in conversation
+# Get topic(s) of conversation by the maximum value
+#
+# 16. Keep track of matching words from 3 previous message/response pairs
+# Get list of these 'depth words'
+#
+# 17. Mark unknown words in dictionary for 'what is/are __' unanswered questions
+#
+# 18. Check for answer to previous 'what is/are' question
+#
+# 19. Check for answer to previous 'why is/are' question
+#
+# 20. Check if user is asking What Question, give possible answer response if so
+#
+# 21. Check if user asking for clarification on previous response,
+# try to find matching message containing 2 or more words from
+# previous response
+#
+# 22. Check if asking what CHELSEA feels about ___,
+# respond according to the tied emotions with the words in ___
+#
+# 23. Check if asking 'do you like/dislike ___' question
+# respond according to tied emotions to words in ___,
+# agreement or disagreement depends on emotion and like/dislike
+# word used
+#
+# 24. Check if asking 'which is better, _1_ or _2_'
+# Used emotions tied to the words to decide which CHELSEA likes better,
+# or indifferent if neither is tied to happy overall
+#
+# 25. Check if asking 'why is' question, try to find match involving
+# 'because' words a possible answer
+# 
+# 26. Check for 'most __emotion__' question, respond with biggest word(s) tied to emotion
+#
+# 27. Check if missing user birthday information, check if user giving info, 
+#	or ask for it
+#
+# 28. PRNG to see if asking user about their preferences
+#
+# 29. Confirm if user answering question about their preferences,
+# possibly modify user message to let fall through to other methods
+# by fitting its format to the patterns
+#
+# 30. PRNG to see if asking user about their past preferences stored in user file
+#
+# 31. Confirm if user answering question about their past preferences
+#
+# 32. Check if user giving details about their preferences, process accordingly
+# and store information, possibly further asking 'why' about their preferences
+#
+# 33. Confirm user's preference information by answering clarification questions
+#
+# 34. PRNG and if user in 'laughing mood' potentially bring up old response
+# user found funny previously
+# 
+# 35. PRNG, possibly bring up past topic at least a day old
+#
+# 36. Check for an exact match of message, give linked response if so
+#
+# 37. Check if message matches as part of a message in memory,
+# give linked reponse if so
+#
+# 38. No match, add response to list in message memory or learn brand new message/response pair
+#
+# 39. Given certain memory conditions and PRNG, search for chain trigrams/bigrams starting with randomly 
+# chosen topic or depth word (Coin flip), chain either forward or reverse (Coin flip)
+#
+# 40. If certain # or greater messages and words in dictionary, PRNG to
+# determine if attempting topic match, or 'depth match' (Coin flip between two) 
+#
+# 41. If certain # or greater messages and words in dictionary, PRNG to
+# determine if doing single term match. If so, coin flip to determine whether
+# trying to match single word from message as part of message in memory,
+# or single word associated with word from message. Repond with linked 
+# response if so
+#
+#
+# 42. 1/6 chance asking unanswered question, else respond with random response from memory to keep conversation going
+#
+#######################################################################################
