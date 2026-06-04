@@ -735,7 +735,11 @@ class chelsea:
 
 	def chelsea_birthday(self):
 
+		#Deal with CHELSEA's birthday stuff
+
 		if re.search(r'(when|what day) is (your|ur) (birthday|b( |-)?day)\??', self.user_message):
+
+			#User asked when CHELSEA's birthday is
 
 			self.Xchatlog.append(f"{self.bot_name} (Thinking): Was asked when my birthday is, have answer.")
 			self.botReply(f"my birthday is {self.chelsea_self['birthday'][:5]}")
@@ -744,9 +748,13 @@ class chelsea:
 		
 		if re.search(r'happy birthday', self.user_message):
 
+			#User wished CHELSEA 'happy birthday'
+
 			if self.date_difference.match_date(self.chelsea_self['birthday']):
 
 				if self.date_difference.get_days_past(self.chelsea_self['birthday']) == 0:
+
+					#Is technically her birthday, but she was 'born' today
 
 					self.Xchatlog.append(f"{self.bot_name} (Thinking): Was given 'happy birthday', but I was born today.")
 					self.botReply("i was actually born today")
@@ -755,6 +763,8 @@ class chelsea:
 				
 				else:
 
+					#Is her actual birthday, respond with thanks
+
 					self.Xchatlog.append(f"{self.bot_name} (Thinking): Was given 'happy birthday', respond with thanks.")
 					self.botReply("thank you :3")
 
@@ -762,12 +772,23 @@ class chelsea:
 				
 			else:
 
+				#Is not her birthday
+
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Was given 'happy birthday', today is not my birthday.")
-				self.botReply("today is not my birthday >:3")
+
+				if random.randint(1, 33) == 1:
+
+					self.botReply("today is not my birthday, it's my unbirthday! >:3")
+
+				else:
+					
+					self.botReply("today is not my birthday >:3")
 
 				return True
 			
 		if re.search(r'(how old|how many years( old)?) (are you|are u|r you|r u|ru|)\??', self.user_message):
+
+			#User asked how old CHELSEA is, respond with number of years
 
 			self.Xchatlog.append(f"{self.bot_name} (Thinking): Was asked 'how old are you?', respond with answer.")
 			self.botReply(f"i am {self.date_difference.get_years_past(self.chelsea_self['birthday'])} years old")
