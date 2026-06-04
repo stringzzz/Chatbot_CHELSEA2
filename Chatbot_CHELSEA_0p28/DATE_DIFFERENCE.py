@@ -356,6 +356,11 @@ class date_difference:
 
 			#Cinco De Mayo
 			return ' Happy Cinco De Mayo!'
+
+		elif self.match_date('07/04'):
+
+			#4th of July (U.S. Independence Day)
+			return ' Happy U.S. Independence Day!'
 		
 		elif self.match_date('10/31'):
 
