@@ -564,6 +564,8 @@ class chelsea:
 		for emotion in self.nEmotions:
 			self.current_mood[emotion] += self.reply_mood[emotion]
 
+		self.adjust_mood()
+
 		#Output her current mood to the extended chatlog
 		self.Xchatlog.append(f"{self.bot_name} (Thinking): I feel {self.current_mood["mood"]}")
 
