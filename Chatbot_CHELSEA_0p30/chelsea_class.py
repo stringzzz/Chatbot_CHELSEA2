@@ -5115,7 +5115,7 @@ class chelsea:
 
 		return False
 	
-	def get_fuzzy_response(self):
+	def check_fuzzy_message_match(self):
 
 		if random.randint(1, 6) == 1:
 		
@@ -5979,7 +5979,7 @@ class chelsea:
 		if self.learn_new_response():
 			return
 		
-		if self.get_fuzzy_response():
+		if self.check_fuzzy_message_match():
 			return
 		if self.check_topic_or_depth_match():
 			return
