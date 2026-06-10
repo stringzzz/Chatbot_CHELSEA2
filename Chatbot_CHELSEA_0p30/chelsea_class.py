@@ -853,7 +853,7 @@ class chelsea:
 
 				#Asked 'what am i' question, give random answer from user profile memory
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Was asked what user is, have an answer.")
-				self.botReply(f"you are {re.sub(r"(your)", "my", random.choice(self.user_self['uam']['info']))}")
+				self.botReply(f"you are {re.sub(r"(your)", "my", random.choice(self.user_self['uam'])['info'])}")
 				
 				return True
 			
@@ -861,7 +861,7 @@ class chelsea:
 
 				#Asked 'what am i not' question, give random answer from user profile memory
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Was asked what user is not, have an answer.")
-				self.botReply(f"you are not {re.sub(r"(your)", "my", random.choice(self.user_self['uamnot']['info']))}")
+				self.botReply(f"you are not {re.sub(r"(your)", "my", random.choice(self.user_self['uamnot'])['info'])}")
 				
 				return True
 
