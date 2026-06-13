@@ -56,6 +56,9 @@ try:
 		chatbot_chelsea.output_user_self()
 		print("Memory output complete.\n")
 
+except Exception as e:
+	print(f"Error: {e}")		
+
 finally:
 	chatbot_chelsea.temp_piper_output_file.close()
 	chatbot_chelsea.close_tts_subprocess()
