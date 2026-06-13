@@ -345,10 +345,13 @@ class chelsea:
 				"mood": ""
 			}
 
-		#If there are topics stored in the user file, input the newest set of them into current_topics
+		#If there are topics stored in the user file, input the newest set of them into topics
 		if len(self.user_self['popular topics']) > 0:
 
-			self.current_topics = list(self.user_self['popular topics'][-1]['topics'])
+			past_topics = list(self.user_self['popular topics'][-1]['topics'])
+			for topic in past_topics:
+
+				self.topics[topic] = 2
 
 	def load_tts_subprocess(self):
 		#Load the subprocesses for text-to-speech
