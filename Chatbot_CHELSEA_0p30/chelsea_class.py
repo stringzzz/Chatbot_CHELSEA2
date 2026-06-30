@@ -1652,7 +1652,7 @@ class chelsea:
 			self.Xchatlog.append(f"{self.bot_name} (Thinking): Found pattern of user asking for clarification, attempting to use fuzzy match to find relevant response to what I previously said.")			
 
 			#Try to find message matching CHELSEA's previous response with similarity score of at least 70%
-			fuzzy_response = self.fuzzy_match(self.CHELSEA_previous_response, 0.70)
+			fuzzy_response = self.fuzzy_match(self.CHELSEA_previous_response, 0.65)
 			
 			if fuzzy_response:
 
@@ -2045,7 +2045,7 @@ class chelsea:
 
 			self.Xchatlog.append(f"{self.bot_name} (Thinking): Found pattern of user asking 'WH' question, attempting to use fuzzy match to find relevant answer to similar question.")
 
-			fuzzy_answer = self.fuzzy_match(question_match.group('question'), 0.75)
+			fuzzy_answer = self.fuzzy_match(question_match.group('question'), 0.70)
 		
 			if fuzzy_answer:
 
@@ -5143,7 +5143,7 @@ class chelsea:
 		if random.randint(1, 6) == 1:
 		
 			#Try to find match of user message in message dictionary with at least 55% similarity
-			fuzzy_response = self.fuzzy_match(self.user_message, 0.55)
+			fuzzy_response = self.fuzzy_match(self.user_message, 0.45)
 			
 			if fuzzy_response:
 
@@ -5833,8 +5833,9 @@ class chelsea:
 			return
 		if self.check_topic_or_depth_match():
 			return
-		if self.use_imagination2():
-			return
+		#Temporary removal of this method
+		#if self.use_imagination2():
+			#return
 		if self.check_single_term_match():
 			return
 		
