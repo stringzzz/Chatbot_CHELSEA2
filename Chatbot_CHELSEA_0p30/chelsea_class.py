@@ -3438,6 +3438,17 @@ class chelsea:
 						if info_group['info'] == info:
 						
 							#Already found in memory
+
+							#Reset asked_question
+							self.asked_question = {
+								'question type': 'None',
+								'info': '',
+								'info type': 'None',
+								'why': '',
+								'date': '',
+								'index': 0
+							}
+
 							info_group['date'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
 							dice_roll = random.randint(1, 5)
@@ -3656,6 +3667,16 @@ class chelsea:
 
 						#Already found in memory, update timestamp
 						info_group['date'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+
+						#Reset asked_question
+						self.asked_question = {
+							'question type': 'None',
+							'info': '',
+							'info type': 'None',
+							'why': '',
+							'date': '',
+							'index': 0
+						}
 
 						dice_roll = random.randint(1, 5)
 						if info_group['why'] == '' and (dice_roll == 1 or dice_roll == 5):
@@ -3891,6 +3912,16 @@ class chelsea:
 
 						#Already found in memory, update timestamp
 						info_group['date'] = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+
+						#Reset asked_question
+						self.asked_question = {
+							'question type': 'None',
+							'info': '',
+							'info type': 'None',
+							'why': '',
+							'date': '',
+							'index': 0
+						}
 
 						dice_roll = random.randint(1, 5)
 						if info_group['why'] == '' and (dice_roll == 1 or dice_roll == 5):
