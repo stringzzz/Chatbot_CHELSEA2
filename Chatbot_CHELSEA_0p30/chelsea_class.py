@@ -394,7 +394,7 @@ class chelsea:
 	def speak_response(self, response):
 
 		#Send response text to piper to generate audio and output to temp file
-		cleaned_response = re.sub(r'([?!]+)\s+', r"\.\n", response)
+		cleaned_response = re.sub(r'([?!.]+)\s+', ", ", response)
 		self.piper_proc.stdin.write(f"{cleaned_response}\n\n".encode("utf-8"))
 		self.piper_proc.stdin.flush()
 
