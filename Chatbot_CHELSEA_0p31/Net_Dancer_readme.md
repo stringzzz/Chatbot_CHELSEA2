@@ -8,7 +8,7 @@ bash net_dancer_installations.sh
 To use this feature, add the argument 'netdancer' to the command line call to 'python3 chatbotCHELSEA.py'.
 
 The initial scan runs this nmap command: 
-nmap -T3 -sV -oX - target_subnet
+nmap -T4 -sV -oX - target_subnet
 
 asking to listen to a specific host for N minutes runs this tshark command: 
 tshark -a fduration:{CAPTURE_DURATION_SECS} -f BPF_FILTER -T fields -e frame.time_relative -e eth.src -e eth.dst -e ip.src -e ip.dst -e frame.protocols -E separator=/t
