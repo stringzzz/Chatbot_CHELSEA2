@@ -5614,6 +5614,53 @@ class chelsea:
 
 					return False
 
+	def fuzzy_match_chain(self, message, similarity_threshold=0.60):
+
+		#Start the recursion with the initial message and N = 5
+		response_chain = self._fuzzy_match_recursive(message, similarity_threshold, N=5)
+		
+		if response_chain != '':
+
+			separator = ',' if message[-1] not in {'.', '?', '!'} else ''
+			new_message = f"{message}{separator} {response_chain}"
+
+			return new_message
+		
+		else:
+
+			return ''
+
+	def _fuzzy_match_recursive(self, message, similarity_threshold, N):
+
+		#Roll the dice: 1 in N chance of continuing
+		if random.randint(1, N) != 1:
+
+			return ""
+
+		#Try to find a fuzzy match for the current message
+		match_result = self.fuzzy_match(message, similarity_threshold)
+		
+		#If no match is found, break recursion
+		if not match_result:
+
+			return ""
+
+		#Get the actual new response
+		new_response = match_result['response']
+		
+		#Recursively call to get the rest of the chain, with N + 1 to lower the odds
+		next_chain = self._fuzzy_match_recursive(new_response, similarity_threshold, N + 1)
+		
+		#Combine the current match with the rest of the chain if it exists
+		if next_chain:
+		
+			#Check ending and join them with ',' if not ending in punctuation
+			separator = ',' if new_response[-1] not in {'.', '?', '!'} else ''
+
+			return f"{new_response}{separator} {next_chain}"
+		
+		return new_response
+
 	def check_exact_message_match(self):
 		
 		#Check for exact match of user reply to message in memory under current mood
@@ -5621,6 +5668,14 @@ class chelsea:
 		try:
 		
 			self.message_dict2[self.current_mood["mood"]][self.user_message]
+
+			#Match found, potentially respond accordingly with fuzzy response chain from random choice from list of associated responses
+			response_chain = self.fuzzy_match_chain(random.choice(self.message_dict2[self.current_mood["mood"]][self.user_message]))
+			if response_chain != '':
+
+				self.Xchatlog.append(f"{self.bot_name} (Thinking): Exact message match found, built fuzzy response chain from it")
+				self.CHELSEA_previous_response = self.botReply(response_chain)
+				return True				
 
 			#Match found, respond accordingly with random choice from list of associated responses
 			self.Xchatlog.append(f"{self.bot_name} (Thinking): Exact message match found.")
@@ -5640,6 +5695,14 @@ class chelsea:
 		for message in self.temp_message_keys:
 		
 			if message.find(self.user_message) != -1:
+
+				#Match found, potentially respond accordingly with fuzzy response chain from random choice from list of associated responses
+				response_chain = self.fuzzy_match_chain(random.choice(self.message_dict2[self.current_mood["mood"]][message]))
+				if response_chain != '':
+
+					self.Xchatlog.append(f"{self.bot_name} (Thinking): Partial message match found, built fuzzy response chain from it")
+					self.CHELSEA_previous_response = self.botReply(response_chain)
+					return True	
 				
 				#Match found, respond accordingly with random choice from list of associated responses
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Partial message match found.")
