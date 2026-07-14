@@ -111,6 +111,9 @@
 # Version 0.31	(Implemented option to enable network scan and questions about network if using the 'netdancer' argument.
 				Allows continuing of chat while a scan is still in progress.): 07-11-2026
 
+				(Added to exact and partial matches the possibility (PRNG, 1/N) of finding a chain of relevant responses using recursive fuzzy_match. 
+				The odds of each next one in the chain get lower as the recursion goes deeper, starting at 1/5 and N increasing by 1 each time): 07-14-2026
+
 ############################################################################################
 ##################### Chatbot CHELSEA message handling algorithm ###########################
 ############################################################################################
@@ -211,10 +214,16 @@
 # 
 # 35. PRNG, possibly bring up past topic at least a day old
 #
-# 36. Check for an exact match of message, give linked response if so
+# 36. Check for an exact match of message, give linked response if so, 
+# may also use recursive fuzzy_match to find a chain of responses given odds 1/N,
+# the odds of each getting lower and lower each recursive call, 
+# starting at 1/5.
 #
 # 37. Check if message matches as part of a message in memory,
-# give linked reponse if so
+# give linked reponse if so, 
+# may also use recursive fuzzy_match to find a chain of responses given odds 1/N,
+# the odds of each getting lower and lower each recursive call, 
+# starting at 1/5.
 #
 # 38. No match, add response to list in message memory or learn brand new message/response pair
 #
