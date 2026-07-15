@@ -114,6 +114,10 @@
 				(Added to exact and partial matches the possibility (PRNG, 1/N) of finding a chain of relevant responses using recursive fuzzy_match. 
 				The odds of each next one in the chain get lower as the recursion goes deeper, starting at 1/5 and N increasing by 1 each time): 07-14-2026
 
+				(Added temporary solution to answering 'why is/are _SUBJECT_ _DEFINITION_?' questions, 
+				can replace the long _DEFINITION_ with just 'this' or 'that' instead: '_SUBJECT_ is that because _EXPLANATION_'.
+				Also moved learn_new_response method to before check_exact_message_match method so CHELSEA still learns new message/response pairs even with those matches): 07-15-2026
+
 ############################################################################################
 ##################### Chatbot CHELSEA message handling algorithm ###########################
 ############################################################################################
@@ -214,18 +218,18 @@
 # 
 # 35. PRNG, possibly bring up past topic at least a day old
 #
-# 36. Check for an exact match of message, give linked response if so, 
+# 36. No match, add response to list in message memory or learn brand new message/response pair
+#
+# 37. Check for an exact match of message, give linked response if so, 
 # may also use recursive fuzzy_match to find a chain of responses given odds 1/N,
 # the odds of each getting lower and lower each recursive call, 
 # starting at 1/5.
 #
-# 37. Check if message matches as part of a message in memory,
+# 38. Check if message matches as part of a message in memory,
 # give linked reponse if so, 
 # may also use recursive fuzzy_match to find a chain of responses given odds 1/N,
 # the odds of each getting lower and lower each recursive call, 
 # starting at 1/5.
-#
-# 38. No match, add response to list in message memory or learn brand new message/response pair
 #
 # 39. Try to find at least 55% similarity (fuzzy) match with the user message to a message in memory,
 # and give the reponse tied to the matching message if so.
