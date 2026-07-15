@@ -2060,26 +2060,47 @@ class chelsea:
 		
 			self.unanswered[f"why {isare}"] = False
 		
-			#Give random response from current mood
-			self.Xchatlog.append(f"{self.bot_name} (Thinking): Gave random response.")	
-			self.CHELSEA_previous_response = self.botReply(random.choice(random.choice(list(self.message_dict2[self.current_mood["mood"]].values()))))
-			return True
+			return
 		
 		#Question formed either follows proper gramar pattern or CHELSEA not corrected
-		question_word = re.search(re.compile(f"why {isare} ([a-z ,'\\-]+)"), self.CHELSEA_previous_response)
+
+		#Try to find user answer with 'that' or 'this' in place of the definition:
+		match1 = re.search(fr'(?P<subject>.*?) (?P<is_are>is|are) (?P<reference>that|this) ({self.get_joined_list('because')}) (?P<explanation>.*)', self.user_message)
+		if match1:
+
+			match2 = re.search(fr"why (is|are) (?P<subject>{match1.group('subject')}) (?P<definition>.*)\?", self.CHELSEA_previous_response)
+
+			if match2:
+
+				self.user_message = re.sub(fr"({match1.group('subject')} {match1.group('is_are')} )({match1.group('reference')})", fr"\1{match2.group('definition')}", self.user_message)
+
+				#Found answer to why is/are question, append answer as response to question
+				self.Xchatlog.append(f"{self.bot_name} (Thinking): Answered why {isare} question.")
+				temp_question = self.CHELSEA_previous_response
+				self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response] = []
+				self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response].append(self.user_message)
 		
+				#Delete question from unanswered questions
+				self.Xchatlog.append(f"{self.bot_name} (Thinking): Deleted unanswered why {isare} question, have answer now.")
+				del self.unanswered_questions[f"why {isare}"][temp_question]
+
+				return
+
+		question_word = re.search(re.compile(f"why {isare} ([a-z ,'\\-]+)"), self.CHELSEA_previous_response)
+
+		#Answer with 'that' or 'this' not found, check for complete defintion in answer:	
 		if (question_word):
 		
 			#Look for answer pattern to question in user reply
 			question_words = question_word.group(1).replace(",", '').split(" ")
 			question_words.append(isare)
-			answer = re.search(r"([a-z ,'\-]+) (because|as|as a result of|by cause of|by reason of|by virtue of|considering|due to|for the reason that|owing to|since|thanks to)", self.user_message)
+			answer = re.search(fr"([a-z ,'\-]+) ({self.get_joined_list('because')})", self.user_message)
 		
 			if not(answer):
 				#Answer to why is/are question pattern not found, forgetting question was asked
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Unanswered why {isare} question still not answered, moving on.")
 				self.unanswered[f"why {isare}"] = False
-				return False
+				return
 		
 			#Answer pattern found
 			answer = answer.group(1)
@@ -2095,7 +2116,7 @@ class chelsea:
 					break
 		
 			if not(answer_not_found):
-		
+
 				#Found answer to why is/are question, append answer as response to question
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Answered why {isare} question.")
 				temp_question = self.CHELSEA_previous_response
@@ -2110,6 +2131,8 @@ class chelsea:
 				#Answer not found
 				self.Xchatlog.append(f"{self.bot_name} (Thinking): Unanswered why {isare} question still not answered, moving on.")
 
+		return
+	
 	def check_for_answer_why(self):
 		
 		#Check for answer to previous why is/are question
@@ -2118,19 +2141,17 @@ class chelsea:
 		if (self.unanswered["why is"]):
 		
 			#Why is
-			if self.check_for_answer_why_general("is"):
-				return True
+			self.check_for_answer_why_general("is")
 
 		elif (self.unanswered["why are"]):
 		
 			#Why are 
-			if self.check_for_answer_why_general("are"):
-				return True
+			self.check_for_answer_why_general("are")
 			
 		self.unanswered["why is"] = False
 		self.unanswered["why are"] = False
 		
-		return False
+		return
 
 	def fuzzy_match(self, message, similarity_threshold):
 
@@ -5661,6 +5682,50 @@ class chelsea:
 		
 		return new_response
 
+	def learn_new_response(self):
+
+		if self.user_gave_details:
+
+			self.user_gave_details = False
+			self.give_random_or_question_response()
+			
+			return True
+		
+		#No match, either add to message/response pairs or learn new one based on reply mood
+		
+		self.Xchatlog.append(f"{self.bot_name} (Thinking): Message not recognized.")
+		
+		try:
+			#Attempt previous response as key under current mood
+			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]
+		
+		except(KeyError):
+			#Previous response under current mood does not exist as key, learn it as a new message, 
+			# make tied responses an empty list. 
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Learned new '{self.reply_mood["mood"]}' response.")
+			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response] = []
+		
+		duplicate_found = False
+		
+		for response in self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]:
+		
+			if (response == self.user_message):
+		
+				#User reply already found tied to message
+				duplicate_found = True
+				break
+		
+		if (not(duplicate_found)):
+
+			#User reply not found tied to message, tie it to message by appending it to list
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Added to '{self.reply_mood["mood"]}' responses.")
+			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response].append(self.user_message)
+
+		#Possibly learn new why is/are question from user_message
+		self.learn_why_isare_question()
+
+		return False
+
 	def check_exact_message_match(self):
 		
 		#Check for exact match of user reply to message in memory under current mood
@@ -5714,50 +5779,6 @@ class chelsea:
 			return True
 		
 		#Partial match not found
-		return False
-	
-	def learn_new_response(self):
-
-		if self.user_gave_details:
-
-			self.user_gave_details = False
-			self.give_random_or_question_response()
-			
-			return True
-		
-		#No match, either add to message/response pairs or learn new one based on reply mood
-		
-		self.Xchatlog.append(f"{self.bot_name} (Thinking): Message not recognized.")
-		
-		try:
-			#Attempt previous response as key under current mood
-			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]
-		
-		except(KeyError):
-			#Previous response under current mood does not exist as key, learn it as a new message, 
-			# make tied responses an empty list. 
-			self.Xchatlog.append(f"{self.bot_name} (Thinking): Learned new '{self.reply_mood["mood"]}' response.")
-			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response] = []
-		
-		duplicate_found = False
-		
-		for response in self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response]:
-		
-			if (response == self.user_message):
-		
-				#User reply already found tied to message
-				duplicate_found = True
-				break
-		
-		if (not(duplicate_found)):
-
-			#User reply not found tied to message, tie it to message by appending it to list
-			self.Xchatlog.append(f"{self.bot_name} (Thinking): Added to '{self.reply_mood["mood"]}' responses.")
-			self.message_dict2[self.reply_mood["mood"]][self.CHELSEA_previous_response].append(self.user_message)
-
-		#Possibly learn new why is/are question from user_message
-		self.learn_why_isare_question()
-
 		return False
 	
 	def check_fuzzy_message_match(self):
@@ -6390,8 +6411,7 @@ class chelsea:
 		self.get_depth_words()
 		self.get_popular_words()
 		self.check_for_answer_what()
-		if self.check_for_answer_why():
-			return
+		self.check_for_answer_why()
 
 		#Responses
 		if self.give_clarification():
@@ -6445,13 +6465,13 @@ class chelsea:
 		
 		if self.recall_past_topic():
 			return
-		
+
+		if self.learn_new_response():
+			return
+
 		if self.check_exact_message_match():
 			return
 		if self.check_partial_message_match():
-			return
-
-		if self.learn_new_response():
 			return
 		
 		if self.check_fuzzy_message_match():
