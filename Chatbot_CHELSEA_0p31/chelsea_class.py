@@ -30,7 +30,7 @@ from collections import deque
 import xml.etree.ElementTree as ET
 from CHELSEA_MATH_LOGIC2 import CHELSEA_Math_Logic2
 from DATE_DIFFERENCE import date_difference
-from NET_DANCER import Net_Dancer #type: ignore
+from NET_DANCER import Net_Dancer
 
 class chelsea:
 	def __init__(self, bot_name):
@@ -777,6 +777,12 @@ class chelsea:
 				
 				print("Speech recognition enabled")
 				return True
+
+			#Enable netdancer
+			if self.user_message == 'enable netdancer':
+				
+				print("netdancer enabled")
+				return True
 		
 		else:
 
@@ -845,7 +851,7 @@ class chelsea:
 				
 			if self.network_listen_complete and self.current_scan_process is not None:
 
-				#Returns None if running , or the exit code if finished
+				#Returns None if running, or the exit code if finished
 				exit_code = self.current_scan_process.poll()
 
 				if exit_code is not None:
@@ -913,12 +919,16 @@ class chelsea:
 
 			if not self.network_scan_complete or not self.network_listen_complete:
 
+				#Scan in progress, default to regular chat
 				return False
 
+			#'your' to 'my', etc.
 			self.user_message = self.Net_Dancer.reverse_pronouns(self.user_message)
 
 			match = re.search(r'(?P<ip>\d+\.\d+\.\d+\.\d+) (is|are) (?P<nickname>.*)', self.user_message)
 			if match:
+
+				#192.168.0.123 is your home
 
 				ip = match.group('ip')
 				nickname = match.group('nickname')
@@ -946,6 +956,8 @@ class chelsea:
 			match = re.search(fr"(how many|what is the number of) ({self.Net_Dancer.get_synonym_list('hosts')}) (did you )?({self.Net_Dancer.get_synonym_list('scanned')}) (were )?({self.Net_Dancer.get_synonym_list('active')})\??", self.user_message)
 			if match:
 
+				#how many hosts scanned were active?
+
 				self.botReply(f"i saw {len(self.net_map_log)} {self.Net_Dancer.get_random_synonym('hosts')} {self.Net_Dancer.get_random_synonym('active')}")
 
 				return True
@@ -953,8 +965,12 @@ class chelsea:
 			match = re.search(fr"which ({self.Net_Dancer.get_synonym_list('host')})s? had the ((?P<most>{self.Net_Dancer.get_synonym_list('most')})|(?P<least>{self.Net_Dancer.get_synonym_list('least')}))( number of| amount of)? ({self.Net_Dancer.get_synonym_list('open')}) ports\??", self.user_message)
 			if match:
 
+				#which devices had the most number of open ports?
+				#which devices had the least number of open ports?
+
 				amount = 'most' if match.group('most') else 'least'
 
+				#Get the max or min number of ports
 				port_max_or_min = 0 if amount == 'most' else 999999
 				for device in self.net_map_log:
 
@@ -964,6 +980,7 @@ class chelsea:
 					else:
 						port_max_or_min = len(self.net_map_log[device]['ports']) if len(self.net_map_log[device]['ports']) < port_max_or_min else port_max_or_min
 
+				#Find devices with the same number of max or min ports
 				most_port_devices = []
 				for device in self.net_map_log:
 
@@ -978,6 +995,7 @@ class chelsea:
 
 				else:
 
+					#Build string of devices with the max or min ports
 					device_list = f"{most_port_devices[0]}"
 					for index in range(1, len(most_port_devices)):
 						device_list = f"{device_list}, {most_port_devices[index]}"
@@ -989,12 +1007,15 @@ class chelsea:
 			match = re.search(fr"what ((?P<all_info>is( all)? the (info|information|data))|are the ips(, )?(?P<name>names(, )?)?(?P<nickname>nicknames(, ))?(?P<mac>mac( addresses)? )?) ?of (all|the) ({self.Net_Dancer.get_synonym_list('hosts')}) with (a(n)?|the) (({self.Net_Dancer.get_synonym_list('open')}) (port|window) (?P<port>\d+)|(service (?P<service>[a-zA-Z0-9.\-]+)))\??", self.user_message)
 			if match:
 
+				#what is all the info of all hosts with the open port 80?
+
 				name = True if match.group('name') or match.group('all_info') else False
 				nickname = True if match.group('nickname') or match.group('all_info') else False
 				mac = True if match.group('mac') or match.group('all_info') else False
 				selected_port = True if match.group('port') else False
 				selected_data = match.group('port') if match.group('port') else match.group('service')
 
+				#Find the devices with matching port or service
 				selected_devices = []
 				for device in self.net_map_log:
 
@@ -1024,6 +1045,7 @@ class chelsea:
 
 				device_list = f"ip: {initial_device}{f" name: {self.net_map_log[initial_device]['name']}" if name and self.net_map_log[initial_device]['name'] != '' else ''}{f" nickname: {self.net_map_log[initial_device]['nickname']}" if nickname and self.net_map_log[initial_device]['nickname'] != '' else ''}{f" mac: {self.net_map_log[initial_device]['mac_address']}" if mac and self.net_map_log[initial_device]['mac_address'] != '' else ''}"
 				
+				#Build info string of all devices with matching port or service
 				for index in range(1, len(selected_devices)):
 				
 					selected_device = selected_devices[index]
@@ -1035,14 +1057,16 @@ class chelsea:
 				return True
 
 			match = re.search(fr"what ((?P<all_info>is( all)? the (info|information|data))|are the ips(, )?(?P<name>names(, )?)?(?P<nickname>nicknames(, ))?(?P<mac>mac( addresses)?)?) ?of (all|the) ({self.Net_Dancer.get_synonym_list('hosts')}) with (a(n)?|the) product containing (?P<product_part>[a-zA-Z0-9.\-]+)\??", self.user_message)
-			
 			if match:
+
+				#what is all the info of all the hosts with the product containing remote?
 
 				name = True if match.group('name') or match.group('all_info') else False
 				nickname = True if match.group('nickname') or match.group('all_info') else False
 				mac = True if match.group('mac') or match.group('all_info') else False
 				product_part = match.group('product_part')
 
+				#Find all devices with product containing string product_part
 				selected_devices = []
 				for device in self.net_map_log:
 
@@ -1059,8 +1083,8 @@ class chelsea:
 					self.botReply(f"no detected {self.Net_Dancer.get_random_synonym('hosts')} with product containing {selected_data}")
 					return True
 				
+				#Build string of info for devices containing matching product name
 				initial_device = selected_devices[0]
-
 				device_list = f"ip: {initial_device}{f" name: {self.net_map_log[initial_device]['name']}" if name and self.net_map_log[initial_device]['name'] != '' else ''}{f" nickname: {self.net_map_log[initial_device]['nickname']}" if nickname and self.net_map_log[initial_device]['nickname'] != '' else ''}{f" mac: {self.net_map_log[initial_device]['mac_address']}" if mac and self.net_map_log[initial_device]['mac_address'] != '' else ''}"
 				
 				for index in range(1, len(selected_devices)):
@@ -1074,11 +1098,15 @@ class chelsea:
 				return True
 
 			match = re.search(fr"what (is|are) the (?P<info>ips|ip|names|name|nicknames|nickname|mac|macs) of all ({self.Net_Dancer.get_synonym_list('active')}) ({self.Net_Dancer.get_synonym_list('hosts')})\??", self.user_message)
-			
 			if match:
+
+				#what are the ips of all active hosts?
+				#what are the names of all active devices?
+				#what are the nicknames of all up buildings?
 
 				info = match.group('info')
 
+				#Build list of active devices/hosts
 				selected_devices = []
 				for device in self.net_map_log:
 
@@ -1089,6 +1117,7 @@ class chelsea:
 					self.botReply(f"no detected {self.Net_Dancer.get_random_synonym('hosts')} {self.Net_Dancer.get_random_synonym('active')}")
 					return True
 			
+				#Build string of ips of all active devices
 				if info == 'ips' or info == 'ip':
 				
 					initial_device = selected_devices[0]
@@ -1105,6 +1134,7 @@ class chelsea:
 				
 					return True
 
+				#Build string of names or nicknames of all active devices
 				elif info == 'name' or info == 'names' or info == 'nickname' or info == 'nicknames':
 
 					name_type = 'name' if info == 'name' or info == 'names' else 'nickname'
@@ -1140,6 +1170,7 @@ class chelsea:
 
 					return True
 				
+				#Build string of mac addresses for all active devices
 				elif info == 'mac' or info == 'macs':
 				
 					initial_device = self.net_map_log[selected_devices[0]]
@@ -1179,14 +1210,21 @@ class chelsea:
 
 					return True
 				
-			match = re.search(fr"what is the (?P<unknown_info>ip( address)?|name|nickname|mac) of the (({self.Net_Dancer.get_synonym_list('active')}) )?(({self.Net_Dancer.get_synonym_list('host')}) )?(with (the )?)?(?P<known_info_type>ip|name|nickname|mac)( address)? (?P<known_info>[a-zA-Z0-9.\-' :]+)", self.user_message)
+			match = re.search(fr"what is the (?P<unknown_info>ip( address)?|name|nickname|mac( address)?) of the (({self.Net_Dancer.get_synonym_list('active')}) )?(({self.Net_Dancer.get_synonym_list('host')}) )?(with (the )?)?(?P<known_info_type>ip|name|nickname|mac)( address)? (?P<known_info>[a-zA-Z0-9.\-' :]+)", self.user_message)
 			if match:
+
+				#what is the name of the active host with the ip 192.168.0.123?
+				#what is the nickname of the active host with the ip 192.168.0.123?
+				#what is the ip address of the device with the nickname your home?
+				#what is the nickname of the active host with ip 192.168.0.123?
+				#what is the ip address of the host with mac aa:bb:cc:dd:ee:ff?
 
 				unknown_info = match.group('unknown_info')
 				known_info = match.group('known_info')
 				known_info_type = match.group('known_info_type')
-				known_info_type = 'mac_address' if known_info_type == 'mac' else known_info_type
+				known_info_type = 'mac_address' if known_info_type == 'mac' or known_info_type == 'mac address' else known_info_type
 
+				#Find the matching device/host given known info, give requested info tied to it
 				match_found = False
 				matching_device = None
 				for device in self.net_map_log:
@@ -1228,11 +1266,16 @@ class chelsea:
 			match = re.search(fr"what is the (?P<unknown_info1>ip( address)?|name|nickname) and (?P<unknown_info2>ip( address)?|name|nickname) of the (({self.Net_Dancer.get_synonym_list('active')}) )?(({self.Net_Dancer.get_synonym_list('host')}) )?(with (the )?)?(?P<known_info_type>ip|name|nickname)( address)? (?P<known_info>[a-zA-Z0-9.\-' ]+)", self.user_message)
 			if match:
 
+				#what is the ip and name of the host with nickname your home?
+				#what is the name and nickname of the host with ip 192.168.0.123?
+				#what is the nickname and ip of the device with name bobs-computer?
+
 				unknown_info1 = match.group('unknown_info1')
 				unknown_info2 = match.group('unknown_info2')
 				known_info = match.group('known_info')
 				known_info_type = match.group('known_info_type')
 
+				#Given the known info, give 2 pieces of requested info
 				match_found = False
 				matching_device = None
 				for device in self.net_map_log:
@@ -1265,11 +1308,19 @@ class chelsea:
 				
 				return True
 			
-			match = re.search(fr"can me listen to the (?P<info_type>ip|name|nickname|mac)( address)? (?P<info>[a-zA-Z0-9.\-' :]+) for (?P<duration>[0-9]+) (?P<duration_type>minute(s)?|seconds)\??", self.user_message)
+			match = re.search(fr"can me (listen|haunt) to the (?P<info_type>ip|name|nickname|mac|network)(( address)? (?P<info>[a-zA-Z0-9.\-' :]+))? for (?P<duration>[0-9]+) (?P<duration_type>minute(s)?|seconds)\??", self.user_message)
 			if match:
 
+				#can you listen to the ip 192.168.0.123 for 1 minute?
+				#can you listen to the network for 6 minutes?
+
+				#Note: it is 'can me' in pattern because all pronouns are inverted at the beginning of this method, such as 'you' -> 'me'
+
 				info_type = match.group('info_type')
-				info = match.group('info').replace('_', ' ')
+				info = ''
+				if info_type != 'network':
+					info = match.group('info')
+	
 				duration = match.group('duration')
 				duration_type = match.group('duration_type')
 
@@ -1277,21 +1328,32 @@ class chelsea:
 				duration = 60 if duration == 0 else duration
 
 				selected_device = None
-				for device in self.net_map_log:
 
-					if (info_type == 'ip' and device == info) \
-						or (info_type == 'name' and self.net_map_log[device]['name'] == info) \
-						or (info_type == 'nickname' and self.net_map_log[device]['nickname'] == info) \
-						or (info_type == 'mac' and self.net_map_log[device]['mac_address'] == info):
+				if info_type == 'network':
+	
+					selected_device = ''
+	
+				else:
 
-						selected_device = device
-						break
+					#Find matching device for the given info
+					for device in self.net_map_log:
 
-				if selected_device:
+						if (info_type == 'ip' and device == info) \
+							or (info_type == 'name' and self.net_map_log[device]['name'] == info) \
+							or (info_type == 'nickname' and self.net_map_log[device]['nickname'] == info) \
+							or (info_type == 'mac' and self.net_map_log[device]['mac_address'] == info):
+
+							selected_device = device
+
+							break
+
+				if selected_device is not None:
+
+					#Matching device found or chosen entire network, initiate tshark packet catpure subprocess
 
 					self.Net_Dancer.save_net_map_log(self.net_map_log)
 
-					self.botReply(f"listening to {info} for {duration} minutes...")
+					self.botReply(f"listening to {info if info_type != 'network' else 'network'} for {duration} minutes...")
 
 					self.current_scan_process = subprocess.Popen(
 						["python3", f"{self.file_path}run_tshark.py", self.file_path, selected_device, '', str(duration)],
@@ -1305,10 +1367,12 @@ class chelsea:
 
 				else:
 
+					#Couldn't find matching device for the given info
 					self.botReply(f"{info} not found")
+	
 					return True
 
-		#Default for no matching pattern
+		#Default for no matching pattern, will go to normal chat instead
 		return False
 	
 	def math_comprehension(self):
@@ -6370,6 +6434,15 @@ class chelsea:
 			#User typed command, switch to speech recognition mode
 			elif self.user_message == 'enable speech':
 				self.enabled_modes['speech_recognition'] = True
+
+			#User entered command, enable netdancer
+			elif self.user_message == 'enable netdancer' and not self.enabled_modes['netdancer']:
+				self.enabled_modes['netdancer'] = True
+
+				self.Net_Dancer = Net_Dancer(self.file_path)
+				self.network_scan_complete = False
+				self.network_listen_complete = True
+				self.net_map_log = []
 
 			#If self.user_message == 'exit the chat', returning will end up exiting the chat and then output all memory
 			#Else, chat loop will continue
