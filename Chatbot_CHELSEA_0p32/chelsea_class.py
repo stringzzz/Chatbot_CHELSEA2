@@ -309,7 +309,6 @@ class chelsea:
 
 					self.Net_Dancer = Net_Dancer(self.file_path)
 					self.enabled_modes['netdancer-server'] = True
-					self.enabled_modes['no_user_file'] = True
 					self.enabled_modes['no_memory_output'] = True
 					self.bot_filename = self.bot_name
 					self.bot_name = "server-CHELSEA"
@@ -352,7 +351,6 @@ class chelsea:
 
 					self.Net_Dancer = Net_Dancer(self.file_path)
 					self.enabled_modes['netdancer-client'] = True
-					self.enabled_modes['no_user_file'] = True
 					self.enabled_modes['no_memory_output'] = True
 					self.bot_filename = self.bot_name
 					self.bot_name = "client-CHELSEA"
@@ -360,7 +358,7 @@ class chelsea:
 					self.Net_Dancer.CHELSEA_client_initialize(netdancer_port, netdancer_ip)
 					print("netdancer-client enabled")
 
-					time.sleep(7) #Illusion of taking turns?
+					time.sleep(5)
 
 
 	def input_user_self(self):
@@ -826,14 +824,14 @@ class chelsea:
 
 			self.Net_Dancer.CHELSEA_server_send_message(botResponse)
 
-			time.sleep(7) #Needed until way to send speech complete
+			time.sleep(5)
 
 		#Send message after speaking it out loud to server-CHELSEA
 		elif self.enabled_modes['netdancer-client']:
 
 			self.Net_Dancer.CHELSEA_client_send_message(botResponse)
 
-			time.sleep(7) #Needed until way to send speech complete
+			time.sleep(5)
 
 		return botResponse
 
@@ -5355,12 +5353,14 @@ class chelsea:
 
 		completed_birthdate = False
 
+		print(self.user_self['birthday']['status'])
+
 		if self.user_self['birthday']['status'] != 'complete':
 
 			#If no or incomplete info on birthday
 
 			user_given_birthday = False
-			user_match = re.search(re.compile(f"my (birthday|date of birth|b(-| )?day) is (((?P<month_string>{self.get_joined_list('months')})\\.?,? ((?P<day>(\\d)?\\d) ?),? ?(?P<year>(\\d\\d)?\\d\\d)?)|(?P<full_date>(\\d)?\\d(/|-)(\\d)?\\d(/|-)((\\d\\d)?\\d\\d)?))"), self.user_message)
+			user_match = re.search(re.compile(f"my (birthday|date of birth|b(-| )?day) is (((?P<month_string>{self.get_joined_list('months')})\\.?,? ((?P<day>(\\d)?\\d) ?),? ?(?P<year>(\\d\\d)?\\d\\d)?)|(?P<full_date>(\\d)?\\d(/|-)(\\d)?\\d(/|-)?((\\d\\d)?\\d\\d)?))"), self.user_message)
 	
 			if user_match:
 
@@ -5469,7 +5469,9 @@ class chelsea:
 				elif self.user_self['birthday']['status'] == 'asked birthday' or user_given_birthday:
 	
 					#Try to get either full birthday or at least the month and day
-					match = re.search(re.compile(f"(my (birthday|date of birth|b(-| )?day) is )?((((?P<month_string>{self.get_joined_list('months')})\\.?,? (?P<day>(\\d)?\\d) ?),? ?(?P<year>(\\d\\d)?\\d\\d)?)|(?P<full_date>(\\d)?\\d(/|-)(\\d)?\\d(/|-)((\\d\\d)?\\d\\d)?))"), self.user_message)
+					match = re.search(re.compile(f"(my (birthday|date of birth|b(-| )?day) is )?((((?P<month_string>{self.get_joined_list('months')})\\.?,? (?P<day>(\\d)?\\d) ?),? ?(?P<year>(\\d\\d)?\\d\\d)?)|(?P<full_date>(\\d)?\\d(/|-)(\\d)?\\d(/|-)?((\\d\\d)?\\d\\d)?))"), self.user_message)
+
+					print(match.group('full_date'))				
 
 					if match:
 
@@ -5483,7 +5485,7 @@ class chelsea:
 							day = ''
 							year = ''
 
-							match2 = re.search(r'(?P<month>(\d)?\d)(/|-)(?P<day>(\d)?\d)(/|-)(?P<year>(\d\d)?\d\d)', match.group('full_date'))
+							match2 = re.search(r'(?P<month>(\d)?\d)(/|-)(?P<day>(\d)?\d)(/|-)?(?P<year>(\d\d)?\d\d)', match.group('full_date'))
 	
 							if match2:
 
@@ -5515,6 +5517,20 @@ class chelsea:
 							else:
 
 								#No year given, ask for it
+
+								print("Debug1")
+
+								match3 = re.search(r'(?P<month>(\d)?\d)(/|-)(?P<day>(\d)?\d)', match.group('full_date'))
+
+								#Tack 0 on beginning of month if only ones digit given
+								month = match3.group('month')
+								if len(month) == 1:
+									month = f"0{month}"
+
+								#Tack 0 on beginning of day if only ones digit given
+								day = match3.group('day')
+								if len(day) == 1:
+									day = f"0{day}"
 
 								self.user_self['birthday']['date'] = f"{month}/{day}/0000, 00:00:00"
 								self.user_self['birthday']['status'] = 'asked birth year'
