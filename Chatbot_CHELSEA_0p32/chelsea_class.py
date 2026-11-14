@@ -184,8 +184,13 @@ class chelsea:
 		try:
 
 			#Try to load self identity file
-			with open(f"{self.file_path}{self.bot_filename}self.json", 'r') as self_file:
-				self.chelsea_self = json.load(self_file)
+			if self.enabled_modes['netdancer-server'] or self.enabled_modes['netdancer-client']:
+				with open(f"{self.file_path}{self.bot_filename}self.json", 'r') as self_file:
+					self.chelsea_self = json.load(self_file)
+
+			else:
+				with open(f"{self.file_path}{self.bot_name}self.json", 'r') as self_file:
+					self.chelsea_self = json.load(self_file)
 
 			#Check if birthday exists, if not create it as today
 			if 'birthday' not in self.chelsea_self:
@@ -792,6 +797,14 @@ class chelsea:
 			return 'temp neutral'
 
 	def botReply(self, botResponse):
+
+		if len(self.previous_pairs) > 2 and botResponse == self.previous_pairs[1][0] and botResponse == self.previous_pairs[2][0]:
+
+			#Repeating responses, give random response from current mood instead to break it
+			#The message is randomly chosen from the list of messages.
+
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Repeating same response, switching to random response to break it.")
+			botResponse = random.choice(random.choice(list(self.message_dict2[self.current_mood["mood"]].values())))
 
 		#Mostly for use in desktop recordings of the chats
 		#Avoid having issues with uploading the videos due to inappropriate language
@@ -6510,7 +6523,7 @@ class chelsea:
 		else:
 		
 			#Give random response from current mood
-			#The message is randomly chosen from the randomly chosen list of messages.
+			#The message is randomly chosen from the list of messages.
 			#Note: Might be better to separate this into multiple statements instead, for clarity.
 
 			random_response = random.choice(random.choice(list(self.message_dict2[self.current_mood["mood"]].values())))
