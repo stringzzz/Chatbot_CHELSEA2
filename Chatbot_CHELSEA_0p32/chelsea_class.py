@@ -5353,8 +5353,6 @@ class chelsea:
 
 		completed_birthdate = False
 
-		print(self.user_self['birthday']['status'])
-
 		if self.user_self['birthday']['status'] != 'complete':
 
 			#If no or incomplete info on birthday
@@ -5469,9 +5467,7 @@ class chelsea:
 				elif self.user_self['birthday']['status'] == 'asked birthday' or user_given_birthday:
 	
 					#Try to get either full birthday or at least the month and day
-					match = re.search(re.compile(f"(my (birthday|date of birth|b(-| )?day) is )?((((?P<month_string>{self.get_joined_list('months')})\\.?,? (?P<day>(\\d)?\\d) ?),? ?(?P<year>(\\d\\d)?\\d\\d)?)|(?P<full_date>(\\d)?\\d(/|-)(\\d)?\\d(/|-)?((\\d\\d)?\\d\\d)?))"), self.user_message)
-
-					print(match.group('full_date'))				
+					match = re.search(re.compile(f"(my (birthday|date of birth|b(-| )?day) is )?((((?P<month_string>{self.get_joined_list('months')})\\.?,? (?P<day>(\\d)?\\d) ?),? ?(?P<year>(\\d\\d)?\\d\\d)?)|(?P<full_date>(\\d)?\\d(/|-)(\\d)?\\d(/|-)?((\\d\\d)?\\d\\d)?))"), self.user_message)			
 
 					if match:
 
@@ -5517,8 +5513,6 @@ class chelsea:
 							else:
 
 								#No year given, ask for it
-
-								print("Debug1")
 
 								match3 = re.search(r'(?P<month>(\d)?\d)(/|-)(?P<day>(\d)?\d)', match.group('full_date'))
 
