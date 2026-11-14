@@ -66,7 +66,7 @@ class chelsea:
 		self.unanswered = {"what": False, "why is": False, "why are": False}
 
 		#For piper voice model
-		self.MODEL_PATH = "/home/stringzzz/.local/share/piper-tts/piper-voices/en_US-amy-low.onnx"
+		self.MODEL_PATH = "/YOUR_PATH_HERE/.local/share/piper-tts/piper-voices/en_US-amy-low.onnx"
 		self.piper_proc = None
 
 		#For use in determining time frames from now to specific timestamp
