@@ -120,6 +120,8 @@
 ###################################################################################################################################################################
 # Version 0.32 	(Gave her the ability to communicate with another copy of herself over a local network connection using 'netdancer-server PORT' and 'netdancer-client PORT IP'
 				arguments.): 11-13-2026
+				(Added a novelty feature called 'scary voice', that allows the user to ask CHELSEA to either repeat the previous response or say the next response
+				in a very deep, slower voice, then reverts back to the normal voice afterwards.): 11-15-2026
 ###################################################################################################################################################################
 
 ############################################################################################
