@@ -50,7 +50,7 @@ class chelsea:
 		self.nEmotions = ["happy", "angry", "sad", "afraid"]
 		self.current_mood = {"mood": "happy", "happy": 0, "angry": 0, "sad": 0, "afraid": 0, "pitch": 435, "speed": 0.85}
 		self.pitches = {"happy": 435, "angry": 390, "sad": 400, "afraid": 445}
-		self.speeds = {"happy": 0.85, "angry": 0.82, "sad": 0.92, "afraid": 0.8}
+		self.speeds = {"happy": 0.85, "angry": 0.92, "sad": 0.75, "afraid": 0.9}
 		self.user_message = " "
 		self.user_self = {}
 		self.chatlog = []
@@ -132,6 +132,9 @@ class chelsea:
 		self.random_response_counter = 0
 
 		self.current_scan_process = None
+
+		#Scary voice active/inactive
+		self.scary_voice = False
 
 	#Input memory
 	def input_dictionary(self):
@@ -1745,6 +1748,30 @@ class chelsea:
 		
 		#CHELSEA 'is/is not' message not found, or learned new 'is/is not'
 		return False
+
+	def ask_scary_voice(self):
+
+		if self.scary_voice:
+
+			#Revert back to normal voice
+			self.current_mood["pitch"] = self.pitches[self.current_mood["mood"]]
+			self.current_mood["speed"] = self.speeds[self.current_mood["mood"]]
+
+			#Reload piper-tts subprocesses
+			self.close_tts_subprocess()
+			self.load_tts_subprocess()
+
+		if re.match(r'(can|could) (you|u) (say|speak)( something)? in (your|ur|a|the) scary voice\?', self.user_message):
+
+			#Change pitch and speed to deep, slow voice
+			self.current_mood["pitch"] = -1100
+			self.current_mood["speed"] = 1.25
+
+			#Reload piper-tts subprocesses
+			self.close_tts_subprocess()
+			self.load_tts_subprocess()
+
+			self.scary_voice = True
 
 	def filter_user_reply(self):
 		
@@ -6600,6 +6627,10 @@ class chelsea:
 		if self.ask_if_user_is():
 			return
 		if self.tell_what_is():
+			return
+
+		#'Scary Voice'
+		if self.ask_scary_voice():
 			return
 
 		#Initial counts and markings
