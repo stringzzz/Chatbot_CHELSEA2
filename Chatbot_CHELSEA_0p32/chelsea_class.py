@@ -1749,7 +1749,17 @@ class chelsea:
 		#CHELSEA 'is/is not' message not found, or learned new 'is/is not'
 		return False
 
-	def ask_scary_voice(self):
+	def activate_scary_voice(self):
+
+		#Change pitch and speed to deep, slow voice
+		self.current_mood["pitch"] = -1100
+		self.current_mood["speed"] = 1.25
+
+		#Reload piper-tts subprocesses
+		self.close_tts_subprocess()
+		self.load_tts_subprocess()
+
+	def revert_to_normal_voice(self):
 
 		if self.scary_voice:
 
@@ -1761,17 +1771,29 @@ class chelsea:
 			self.close_tts_subprocess()
 			self.load_tts_subprocess()
 
+			self.scary_voice = False
+
+	def ask_scary_voice(self):
+
 		if re.match(r'(can|could) (you|u) (say|speak)( something)? in (your|ur|a|the) scary voice\?', self.user_message):
 
-			#Change pitch and speed to deep, slow voice
-			self.current_mood["pitch"] = -1100
-			self.current_mood["speed"] = 1.25
+			#Setup to give next response in 'scary voice'
 
-			#Reload piper-tts subprocesses
-			self.close_tts_subprocess()
-			self.load_tts_subprocess()
-
+			self.activate_scary_voice()
 			self.scary_voice = True
+
+		elif re.match(r'(can|could) (you|u) (repeat|say|speak) (that |the (last|previous|prior) thing ((you|u) (said|spoke) )?)(in|with) (your|ur|the) scary voice\?', self.user_message):
+
+			#Repeat previous response in 'scary voice'
+
+			self.activate_scary_voice()
+			self.scary_voice = True
+
+			self.CHELSEA_previous_response = self.botReply(self.CHELSEA_previous_response)
+
+			return True
+
+		return False
 
 	def filter_user_reply(self):
 		
@@ -6589,6 +6611,9 @@ class chelsea:
 		#A return of True from one of these methods causes a return from this method, basically saying 'The user reply was handled with an appropriate response'.
 		#Otherwise it falls through to the next method.
 		
+		#Set back to usual voice if 'scary voice' active
+		self.revert_to_normal_voice()
+
 		if self.get_user_reply(sr, r, source):
 
 			#User spoke command, switch to text input mode
