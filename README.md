@@ -1,10 +1,10 @@
-###############################################################################################
+####################################################################
 
 
-################## Chatbot CHELSEA2 (CHat Emotion Logic SEnse Automator) ######################
+####### Chatbot CHELSEA2 (CHat Emotion Logic SEnse Automator) ######
 
 
-###############################################################################################
+####################################################################
 
 
 This is a kind of continuation of an AI chatbot project I started called CHELSEA, written in Python (there will be other languages involved later on). 
