@@ -114,5 +114,6 @@ or ask to start listening in on a specified device.
 copies of CHELSEA talk to each other through a network connection.
 
 
-'netdancer-client PORT IP': Setup host system as a client to connect with PORT onto the server system at IP.
+'netdancer-client PORT IP mN': Setup host system as a client to connect with PORT onto the server system at IP.
+'mN' is where m is required as is, and N is the max number of messages for the client to send before disconnecting.
 Allows CHELSEA to talk with a copy of herself over a network connection.
