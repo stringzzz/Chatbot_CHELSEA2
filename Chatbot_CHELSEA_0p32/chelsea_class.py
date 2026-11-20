@@ -188,10 +188,12 @@ class chelsea:
 
 			#Try to load self identity file
 			if self.enabled_modes['netdancer-server'] or self.enabled_modes['netdancer-client']:
+
 				with open(f"{self.file_path}{self.bot_filename}self.json", 'r') as self_file:
 					self.chelsea_self = json.load(self_file)
 
 			else:
+
 				with open(f"{self.file_path}{self.bot_name}self.json", 'r') as self_file:
 					self.chelsea_self = json.load(self_file)
 
@@ -340,6 +342,18 @@ class chelsea:
 
 						netdancer_ip = argument
 
+				#Attempt to get max message limit for netdancer-client
+				netdancer_message_limit = None
+				netdancer_message_limit_found = False
+				for argument in arguments:
+
+					m1 = re.match(r'^m(\d+)$', argument)
+					if m1:
+
+						netdancer_message_limit = int(m1.group(1))
+						print(f"message limit for client set to {netdancer_message_limit}")
+						netdancer_message_limit_found = True
+
 				if not netdancer_port:
 
 					print("no port found for netdancer-client, netdancer-client not enabled")
@@ -347,6 +361,11 @@ class chelsea:
 				if not netdancer_ip:
 
 					print("no ip found for netdancer-client to connect to netdancer-server, netdancer-client not enabled")
+
+				if not netdancer_message_limit_found:
+
+					print("argument 'mN' for max client message limit not found, defaulting to 20 message limit")
+					netdancer_message_limit = 20
 
 				if netdancer_port and netdancer_ip:
 
@@ -358,7 +377,7 @@ class chelsea:
 					self.bot_filename = self.bot_name
 					self.bot_name = "client-CHELSEA"
 					self.username = "server-CHELSEA"
-					self.Net_Dancer.CHELSEA_client_initialize(netdancer_port, netdancer_ip)
+					self.Net_Dancer.CHELSEA_client_initialize(netdancer_port, netdancer_ip, netdancer_message_limit)
 					print("netdancer-client enabled")
 
 					time.sleep(5)
@@ -1775,19 +1794,23 @@ class chelsea:
 
 	def ask_scary_voice(self):
 
-		if re.match(r'(can|could) (you|u) (say|speak)( something)? in (your|ur|a|the) scary voice\?', self.user_message):
+		if re.search(r'(can|could) (you|u) (say|speak)( something)? in (your|ur|a|the) scary voice\?', self.user_message):
 
 			#Setup to give next response in 'scary voice'
 
 			self.activate_scary_voice()
 			self.scary_voice = True
 
-		elif re.match(r'(can|could) (you|u) (repeat|say|speak) (that |the (last|previous|prior) thing ((you|u) (said|spoke) )?)(in|with) (your|ur|the) scary voice\?', self.user_message):
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Setup to give next response in 'scary voice'.")
+
+		elif re.search(r'(can|could) (you|u) (repeat|say|speak) (that |the (last|previous|prior) thing ((you|u) (said|spoke) )?)(in|with) (your|ur|the) scary voice\?', self.user_message):
 
 			#Repeat previous response in 'scary voice'
 
 			self.activate_scary_voice()
 			self.scary_voice = True
+
+			self.Xchatlog.append(f"{self.bot_name} (Thinking): Repeating previous response in 'scary voice'.")
 
 			self.CHELSEA_previous_response = self.botReply(self.CHELSEA_previous_response)
 
