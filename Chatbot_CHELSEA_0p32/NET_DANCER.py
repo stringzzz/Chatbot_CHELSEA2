@@ -441,7 +441,7 @@ class Net_Dancer:
 		message = f"messageflag{message}"
 		self.c.send(message.encode())
 
-	def CHELSEA_client_initialize(self, port, ip):
+	def CHELSEA_client_initialize(self, port, ip, message_limit):
 
 		#######################################################################################
 		# Need error handling if connection cannot be established, otherwise can create mess  #
@@ -465,6 +465,7 @@ class Net_Dancer:
 
 			#Count needed to know when to end connection
 			self.message_count = 0
+			self.message_limit = message_limit
 
 		else:
 
@@ -487,7 +488,7 @@ class Net_Dancer:
 		#Normal message, increase message count and see if at limit
 		self.message_count += 1
 
-		if self.message_count == 80:
+		if self.message_count == self.message_limit:
 
 			#Message limit reached, initiate connection shutdown process
 
