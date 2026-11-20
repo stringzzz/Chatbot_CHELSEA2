@@ -122,6 +122,8 @@
 				arguments.): 11-13-2026
 				(Added a novelty feature called 'scary voice', that allows the user to ask CHELSEA to either repeat the previous response or say the next response
 				in a very deep, slower voice, then reverts back to the normal voice afterwards.): 11-15-2026
+				(Can set netdancer-client to a message limit before disconnect by the 3rd (optional) argument 'mN', where N is the message limit. Leaving out
+				this argument causes the message limit to default to 20): 11-19-2026
 ###################################################################################################################################################################
 
 ############################################################################################
